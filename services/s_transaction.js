@@ -15,7 +15,7 @@ async function addTransaction(req, res) {
 async function getAllTransactions(req, res) {
     try {
         let transactions = await Trasactions.findAll({attributes: ['orderId', 'orderAmount', 'OrderStatus', 'createdAt', 'updatedAt']});
-        return res.status(200).json({status: 200, data: transactions});
+        return res.status(200).json({"status": 200, "data": transactions});
        } catch(e) {
         return res.send(e.errors[0].message);
        }
@@ -52,7 +52,7 @@ async function getTransactionsByDate(req, res) {
     const Op = Sequelize.Op;
     const TODAY_START = new Date(req.params.date)
     const NOW = new Date();
-    console.log(TODAY_START);
+
     try {
         let transactions = await Trasactions.findAll({
             attributes: ['orderStatus', 
@@ -101,7 +101,7 @@ async function getTransactionsByDateRange(req, res) {
 async function getTransactionsByMonth(req, res) {
     const Op = Sequelize.Op;
     const CUR_YEAR = new Date().getFullYear();
-    console.log(CUR_YEAR);
+
     try {
         let transactions = await Trasactions.findAll({
             attributes: ['orderStatus', [sequelize.fn('COUNT', sequelize.col('orderStatus')), 'ProjectCount']],
@@ -123,7 +123,7 @@ async function getTransactionsByMonth(req, res) {
 async function getTransactionsByYear(req, res) {
     const Op = Sequelize.Op;
     const CUR_YEAR = new Date().getFullYear();
-    console.log(CUR_YEAR);
+
     try {
         let transactions = await Trasactions.findAll({
             attributes: ['orderStatus', [sequelize.fn('COUNT', sequelize.col('orderStatus')), 'ProjectCount']],

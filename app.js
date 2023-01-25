@@ -8,6 +8,7 @@ import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import transactionRouter from './routes/transactions';
 import merchantRouter from './routes/merchants';
+import CashFreeRouter from './routes/cashfree';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import http from 'https';
@@ -15,6 +16,7 @@ import sequelize from './sequelize/sequelize'
 import Transactions from './sequelize/models/m_transactions';
 import Merchant from './sequelize/models/user';
 import Customer from './sequelize/models/m_customer'
+import Beneficiary from './sequelize/models/m_beneficiery'
 import cors from 'cors';
 
 
@@ -46,6 +48,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/transactions', transactionRouter);
 app.use('/merchants', merchantRouter);
+app.use('/cashfree', CashFreeRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

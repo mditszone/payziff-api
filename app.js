@@ -7,16 +7,17 @@ import fetch from "node-fetch";
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import transactionRouter from './routes/transactions';
-import merchantRouter from './routes/merchants';
+import UserRouter from './routes/users';
 import CashFreeRouter from './routes/cashfree';
+import FirebaseRouter from './routes/firebase';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import http from 'https';
-import sequelize from './sequelize/sequelize'
+import sequelize from './sequelize/sequelize';
+
 import Transactions from './sequelize/models/m_transactions';
-import Merchant from './sequelize/models/user';
-import Customer from './sequelize/models/m_customer'
-import Beneficiary from './sequelize/models/m_beneficiery'
+import User from './sequelize/models/m_user'
+import Role from './sequelize/models/m_role';
 import cors from 'cors';
 
 
@@ -45,10 +46,12 @@ app.use(cookieParser());
 app.use(eStatic(join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/transactions', transactionRouter);
-app.use('/merchants', merchantRouter);
+app.use('/user', UserRouter);
 app.use('/cashfree', CashFreeRouter);
+app.use('/firebase', FirebaseRouter);
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

@@ -42,7 +42,7 @@ router.get('/generateToken', function(req, res, next) {
     },
     body: JSON.stringify({
       "order_amount": 1.00,
-      "order_id": "123jlkjl4568215",
+      "order_id": "123jlkjl4568222",
       "order_currency": "INR",
       "customer_details": {
       "customer_id": "321654987",

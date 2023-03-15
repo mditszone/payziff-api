@@ -1,7 +1,9 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import sequelize from '../sequelize';
+import Role from '../models/m_role';
 
-const Merchant = sequelize.define('Merchant', {
+
+const User = sequelize.define('User', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -9,19 +11,29 @@ const Merchant = sequelize.define('Merchant', {
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   phoneNumber: {
     type: DataTypes.STRING,
-    allowNull: false
-  }
+    allowNull: false,
+    unique: true,
+  },
+  aadharNumber: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
 }, {
   // Other model options go here
 });
 
+User.belongsTo(Role, {
+    foreignKey: "roleId",
+    allowNull: false
+});
 
-export default Merchant;
+export default User;

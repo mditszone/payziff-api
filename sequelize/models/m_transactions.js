@@ -1,7 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import sequelize from '../sequelize';
 import Customer from './m_customer';
-import Merchant from './user';
 
 const Transactions = sequelize.define('Transactions', {
   // Model attributes are defined here
@@ -41,7 +40,6 @@ const Transactions = sequelize.define('Transactions', {
   // Other model options go here
 });
 
-Transactions.hasOne(Merchant);
-Transactions.hasOne(Customer);
+
 
 export default Transactions;

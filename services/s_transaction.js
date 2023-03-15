@@ -26,6 +26,7 @@ async function getTodayTransactions(req, res) {
     const Op = Sequelize.Op;
     const TODAY_START = new Date().setHours(0, 0, 0, 0);
     const NOW = new Date();
+    console.log(TODAY_START, new Date().toLocaleTimeString());
 
     try {
         let transactions = await Trasactions.findAll({
@@ -55,8 +56,8 @@ async function getTransactionsByDate(req, res) {
 
     try {
         let transactions = await Trasactions.findAll({
-            attributes: ['orderStatus', 
-                [sequelize.fn('COUNT', sequelize.col('orderStatus')), 'statusCount'],
+            attributes: [
+                [sequelize.fn('SUM', sequelize.col('orderAmount')), 'orderAmount'],
                 [sequelize.fn('SUM', sequelize.col('orderAmount')), 'orderAmount']
             ],
             where: {
@@ -72,6 +73,30 @@ async function getTransactionsByDate(req, res) {
        } catch(e) {
         return res.send(e);
        }
+}
+
+async function getTransactionsByMonth(req, res) {
+  const Op = Sequelize.Op;
+  const CUR_YEAR = new Date().getFullYear();
+  console.log("full year", CUR_YEAR);
+  try {
+      let transactions = await Trasactions.findAll({
+          attributes: [
+              [sequelize.fn('DAY', Sequelize.col('createdAt')), 'day'], 
+              [sequelize.fn('SUM', sequelize.col('orderAmount')), 'orderAmount']
+          ],
+          where: {
+            [Op.and]: [
+              Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('createdAt')), req.params.month),
+              Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('createdAt')), CUR_YEAR),
+            ]
+          },
+          group: ['createdAt'],
+        });
+      return res.status(200).json({status: 200, data: transactions});
+     } catch(e) {
+      return res.send(e);
+     }
 }
 
 async function getTransactionsByDateRange(req, res) {
@@ -98,26 +123,32 @@ async function getTransactionsByDateRange(req, res) {
        }
 }
 
-async function getTransactionsByMonth(req, res) {
-    const Op = Sequelize.Op;
-    const CUR_YEAR = new Date().getFullYear();
 
-    try {
-        let transactions = await Trasactions.findAll({
-            attributes: ['orderStatus', [sequelize.fn('COUNT', sequelize.col('orderStatus')), 'ProjectCount']],
-            where: {
-                [Op.and]: [
-                    Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('createdAt')), req.params.month),
-                    Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('createdAt')), CUR_YEAR),
-                ],
-            },
-            group: ['orderStatus'],
-            order: ['createdAt'],
-          });
-        return res.status(200).json({status: 200, data: transactions});
-       } catch(e) {
-        return res.send(e);
-       }
+
+async function getTransactionsByWholeMonth(req, res) {
+  const Op = Sequelize.Op;
+  const CUR_YEAR = new Date().getFullYear();
+
+  try {
+      let transactions = await Trasactions.findAll({
+          attributes: ['orderStatus', 
+            [sequelize.fn('COUNT', sequelize.col('orderStatus')), 'statusCount'],
+            [sequelize.fn('SUM', sequelize.col('orderAmount')), 'orderAmount'],
+            [sequelize.fn('DAY', Sequelize.col('createdAt')), 'day']
+          ],
+          where: {
+              [Op.and]: [
+                  Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('createdAt')), req.params.month),
+                  Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('createdAt')), CUR_YEAR),
+              ],
+          },
+          group: ['createdAt', 'orderStatus'],
+          order: ['createdAt'],
+        });
+      return res.status(200).json({status: 200, data: transactions});
+     } catch(e) {
+      return res.send(e);
+     }
 }
 
 async function getTransactionsByYear(req, res) {
@@ -126,7 +157,11 @@ async function getTransactionsByYear(req, res) {
 
     try {
         let transactions = await Trasactions.findAll({
-            attributes: ['orderStatus', [sequelize.fn('COUNT', sequelize.col('orderStatus')), 'ProjectCount']],
+            attributes: ['orderStatus', 
+              [sequelize.fn('COUNT', sequelize.col('orderStatus')), 'statusCount'],
+              [sequelize.fn('SUM', sequelize.col('orderAmount')), 'orderAmount'],
+              [ sequelize.fn('MONTH', Sequelize.col('createdAt')), 'Month']
+            ],
             where: Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('createdAt')), req.params.year),
             group: ['orderStatus'],
             order: ['createdAt'],
@@ -144,6 +179,7 @@ export default {
     getTodayTransactions,
     getTransactionsByDate,
     getTransactionsByMonth,
+    getTransactionsByWholeMonth,
     getTransactionsByYear,
     getTransactionsByDateRange
 }

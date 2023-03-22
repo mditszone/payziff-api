@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import Merchant from '../services/s_merchant';
+import User from '../services/s_merchant';
+import { verifyToken } from '../services/jwt';
 
 const router = Router();
 
-router.post("/createUser", Merchant.createUser);
-router.post("/updateUser", Merchant.updateUser);
-router.get("/getAllMerchants", Merchant.getAllMerchants);
-router.get("/getAllStaff", Merchant.getAllStaff);
-router.get("/getMerchantById/:id", Merchant.getMerchantById);
+router.post("/createUser", verifyToken,  User.createUser);
+router.post("/updateUser", verifyToken, User.updateUser);
+router.get("/getAllUsers", verifyToken, User.getAllUsers);
+router.get("/getAllStaff", verifyToken, User.getAllStaff);
+router.get("/getUserById/:id", verifyToken, User.getUserById);
 
 export default router;

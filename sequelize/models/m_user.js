@@ -20,12 +20,16 @@ const User = sequelize.define('User', {
   phoneNumber: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: false,
   },
   aadharNumber: {
     type: DataTypes.STRING,
     allowNull: true,
-    unique: true,
+    unique: false,
+  },
+  token: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 }, {
   // Other model options go here

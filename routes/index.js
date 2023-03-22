@@ -29,6 +29,46 @@ router.get('/test', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.post('/cashfree_authorize', function(req, res, next) {
+  const body = req.body;
+  fetch("https://payout-gamma.cashfree.com/payout/v1/authorize", {
+    method: 'POST',
+    headers: {
+      'x-client-id': "CF5728CGAPJ0J5JT3M0H9MLGAG",
+      'x-client-secret': "a6e027514ea50fe4246112c61ddcbd8cdf5a4329",
+    },
+  }).then(async (res) => {
+    return await res.json();
+  }).then((json) =>{
+    console.log(json);
+    
+    fetch("https://payout-gamma.cashfree.com/payout/v1/addBeneficiary", {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${json.data.token}`
+      },
+      body: JSON.stringify(body)
+      // body: JSON.stringify( {
+      //   "beneId": "JOHN1801135",
+      //   "name": "john doe",
+      //   "email": "johndoe@cashfree.com",
+      //   "phone": "9876543210",
+      //   "bankAccount": "00111122239",
+      //   "ifsc": "HDFC0000001",
+      //   "address1": "ABC Street",
+      //   "city": "Bangalore",
+      //   "state": "Karnataka",
+      //   "pincode": "560001"
+      // })
+    }).then(async (res) => {
+      return await res.json();
+    }).then((json) =>{
+      res.json(json);
+    });
+    
+  });
+});
+
 router.get('/generateToken', function(req, res, next) {
   fetch("https://sandbox.cashfree.com/pg/orders", {
     method: 'POST',
@@ -40,9 +80,10 @@ router.get('/generateToken', function(req, res, next) {
       'x-api-version': '2022-09-01',
       'x-request-id': "developer_name"
     },
+    
     body: JSON.stringify({
       "order_amount": 1.00,
-      "order_id": "123jlkjl4568222",
+      "order_id": "123jlkjl4568244",
       "order_currency": "INR",
       "customer_details": {
       "customer_id": "321654987",
@@ -61,6 +102,8 @@ router.get('/generateToken', function(req, res, next) {
     console.log(json);
     res.json({orderId: json["order_id"], orderToken: json["payment_session_id"]});
   });
+
+  
   // pg.orders
 
   // .createOrders({

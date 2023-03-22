@@ -11,4 +11,5 @@ router.get("/getTransactionsByMonth/:month", Transactions.getTransactionsByMonth
 router.get("/getTransactionsByWholeMonth/:month", Transactions.getTransactionsByWholeMonth);
 router.get("/getTransactionsByYear/:year", Transactions.getTransactionsByYear);
 router.get("/getTransactionsByDateRange", Transactions.getTransactionsByDateRange)
+
 export default router;

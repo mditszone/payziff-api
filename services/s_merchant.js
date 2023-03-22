@@ -1,10 +1,11 @@
-import Merchant from '../sequelize/models/m_user';
+import User from '../sequelize/models/m_user';
 
 async function createUser(req, res) {
    console.log(req.body);
    try {
-    const merchant = await Merchant.create(req.body);
-    return res.status(200).json(merchant);
+    const user = await User.create(req.body);
+    console.log(user)
+    return res.status(200).json(user);
    } catch(e) {
     return res.send(e);
    }
@@ -13,17 +14,17 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
    console.log(req.body);
     try {
-     const merchant = await Merchant.update(req.body.data, { where: { id: req.body.id } })
-     return res.status(200).json(merchant);
+     const User = await User.update(req.body.data, { where: { id: req.body.id } })
+     return res.status(200).json(User);
     } catch(e) {
      return res.send(e);
     }
  
  }
 
-async function getAllMerchants(req, res) {
+async function getAllUsers(req, res) {
     try {
-        let transactions = await Merchant.findAll({
+        let transactions = await User.findAll({
             attributes: ['id', 'name', 'email', 'phoneNumber', 'createdAt', 'updatedAt'],
             where: {
                 roleId: 2
@@ -37,7 +38,7 @@ async function getAllMerchants(req, res) {
 
 async function getAllStaff(req, res) {
     try {
-        let transactions = await Merchant.findAll({
+        let transactions = await User.findAll({
             attributes: ['id', 'name', 'email', 'phoneNumber', 'createdAt', 'updatedAt'],
             where: {
                 roleId: 1
@@ -49,10 +50,10 @@ async function getAllStaff(req, res) {
        }
 }
 
-async function getMerchantById(req, res) {
+async function getUserById(req, res) {
     let id = req.params.id;
     try {
-        let transactions = await Merchant.findOne({ where: { id: id} });
+        let transactions = await User.findOne({ where: { id: id} });
         console.log(transactions);
         return res.status(200).json({status: 200, data: transactions});
        } catch(e) {
@@ -60,10 +61,22 @@ async function getMerchantById(req, res) {
        }
 }
 
+export async function findByPhoneNumber(phoneNumber) {
+    
+    if (!phoneNumber) return "required phone number";
+
+    try {
+        const user = await User.findOne({ where: { phoneNumber: phoneNumber} });
+        return user
+       } catch(e) {
+        return e;
+       }
+}
+
 export default {
     createUser,
     updateUser,
-    getAllMerchants,
+    getAllUsers,
     getAllStaff,
-    getMerchantById
+    getUserById,
 }

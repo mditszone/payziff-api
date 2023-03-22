@@ -11,13 +11,11 @@ const Transactions = sequelize.define('Transactions', {
   },
   cfOrderId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    unique: true
+    allowNull: true,
   },
   orderId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    unique: true
+    allowNull: true,
   },
   entity: {
     type: DataTypes.STRING,

@@ -10,6 +10,7 @@ import transactionRouter from './routes/transactions';
 import UserRouter from './routes/users';
 import CashFreeRouter from './routes/cashfree';
 import FirebaseRouter from './routes/firebase';
+import AuthenticationRouter from './routes/authentication';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import http from 'https';
@@ -18,6 +19,7 @@ import sequelize from './sequelize/sequelize';
 import Transactions from './sequelize/models/m_transactions';
 import User from './sequelize/models/m_user'
 import Role from './sequelize/models/m_role';
+import Beneficiary from './sequelize/models/m_beneficiery';
 import cors from 'cors';
 
 
@@ -46,8 +48,9 @@ app.use(cookieParser());
 app.use(eStatic(join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/auth', AuthenticationRouter);
 app.use('/transactions', transactionRouter);
-app.use('/user', UserRouter);
+app.use('/api/user', UserRouter);
 app.use('/cashfree', CashFreeRouter);
 app.use('/firebase', FirebaseRouter);
 
